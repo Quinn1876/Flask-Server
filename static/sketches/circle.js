@@ -10,10 +10,10 @@ function setup(){
 	// ...
 	wi = createSlider(1, 1000, 500, 1).parent('width');
 	//wi.postition(20,20);	
-        //hi = createSlider(1, 1000, 500, 1).parent('height');
+        hi = createSlider(1, 1000, 500, 1).parent('height');
 	//hi.postition(20,40);
 }
 
 function draw() {
-	ellipse(width/2, height/2, wi.value(), wi.value()); 
+	ellipse(width/2, height/2, wi.value(), hi.value()); 
 }
