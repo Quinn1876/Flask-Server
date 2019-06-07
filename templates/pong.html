@@ -1,0 +1,18 @@
+{% extends "bootstrap/base.html" %}
+{% block title %} Pong {% endblock title %}
+
+{% block head %}
+{{super()}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.js"></script>
+<script src={{ url_for('send_static', path='sketches/pong.js') }}></script>
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+
+	<!-- div element that will hold the canvas -->
+	<div id="canvasHolder" align="center">
+	</div>
+</div>
+{% endblock content %}
