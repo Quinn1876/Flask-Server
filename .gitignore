@@ -1,3 +1,4 @@
 virtual
 static/config
 __pycache__
+.vscode
