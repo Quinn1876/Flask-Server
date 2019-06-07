@@ -34,3 +34,13 @@ class Paddle{
         this.x += this.XSTEP;
     }
 }
+
+function keyPressed() {
+    var curKey = key;
+    if ( curKey == RIGHT ) {
+        paddle.stepRight();
+    }
+    else if ( curKey == LEFT ) {
+        paddle.stepLeft()
+    }
+}
