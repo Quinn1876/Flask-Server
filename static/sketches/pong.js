@@ -5,7 +5,7 @@ var paddle;
 
 function setup() {
     createCanvas(w, h).parent('canvasHolder');
-    paddle = Paddle(20); // May need to change this value
+    paddle = new Paddle(40); // May need to change this value
 }
 function draw(){
     clear();
@@ -16,9 +16,9 @@ function draw(){
 class Paddle{
     constructor(width) {
         this.width = width;
-        this.height = 10; // This may need to be changed
+        this.height = 5; // This may need to be changed
         this.x = width/2;
-        this.y = height - 20;
+        this.y = h - 20;
         this.XSTEP = 20;
     }
 
@@ -27,20 +27,24 @@ class Paddle{
     }
 
     stepLeft() {
-        this.x -= this.XSTEP;
+	if (this.x - this.XSTEP >= 0) {
+       		this.x -= this.XSTEP;
+	}
     }
 
     stepRight() {
-        this.x += this.XSTEP;
+	    if (this.x + this.width + this.XSTEP <= w) {
+        	this.x += this.XSTEP;
+	    }
     }
 }
 
 function keyPressed() {
-    var curKey = key;
-    if ( curKey == RIGHT ) {
+    var curKey = keyCode;
+    if ( keyCode == RIGHT_ARROW ) {
         paddle.stepRight();
     }
-    else if ( curKey == LEFT ) {
+    else if ( keyCode == LEFT_ARROW ) {
         paddle.stepLeft()
     }
 }
