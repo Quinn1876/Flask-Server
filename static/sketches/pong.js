@@ -11,17 +11,18 @@ function setup() {
 }
 function draw(){
     clear();
-    fill(0);
-    paddle.draw(keys)
+    fill(255);
+    rect(0, 0, w-1, h-1);	
+    paddle.draw(keys);
 }
 
 class Paddle{
     constructor(width) {
         this.width = width;
         this.height = 5; // This may need to be changed
-        this.x = width/2;
+        this.x = w/2;
         this.y = h - 20;
-        this.XSTEP = 20;
+        this.XSTEP = 5;
     }
 
     draw(keys) {
@@ -31,6 +32,7 @@ class Paddle{
         else if (keys[1] && !keys[0]) {
             this.stepRight();
         }
+        fill(0);
         rect(this.x, this.y, this.width, this.height);
     }
 
