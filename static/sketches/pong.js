@@ -1,16 +1,18 @@
 var w = 600;
 var h = 400;
 var paddle;
+var keys;
 
 
 function setup() {
     createCanvas(w, h).parent('canvasHolder');
     paddle = new Paddle(40); // May need to change this value
+    keys = [false,false];
 }
 function draw(){
     clear();
     fill(0);
-    paddle.draw();
+    paddle.draw(keys)
 }
 
 class Paddle{
@@ -22,7 +24,13 @@ class Paddle{
         this.XSTEP = 20;
     }
 
-    draw() {
+    draw(keys) {
+        if (keys[0] && !keys[1]) {
+            this.stepLeft();
+        }
+        else if (keys[1] && !keys[0]) {
+            this.stepRight();
+        }
         rect(this.x, this.y, this.width, this.height);
     }
 
@@ -40,11 +48,19 @@ class Paddle{
 }
 
 function keyPressed() {
-    var curKey = keyCode;
     if ( keyCode == RIGHT_ARROW ) {
-        paddle.stepRight();
+        keys[1] = true;
     }
     else if ( keyCode == LEFT_ARROW ) {
-        paddle.stepLeft()
+        keys[0] = true;
+    }
+}
+
+function keyReleased() {
+    if ( keyCode == RIGHT_ARROW ) {
+        keys[1] = false;
+    }
+    else if ( keyCode == LEFT_ARROW ) {
+        keys[0] = false;
     }
 }
