@@ -17,6 +17,7 @@ function setup() {
     keys = [false,false];
     SCORE = 0;
     PLAYING = true;
+    blocks = new Blocks();
 }
 function draw(){
     if (PLAYING) {
@@ -52,11 +53,11 @@ function keyReleased() {
 ///////////////////////////////////////////////////////////////////////////
 
 class Block {
-    constructor(width) {
+    constructor(width, x, y) {
         this.width = width;
         this.height = 5; // This may need to be changed
-        this.x = w/2;
-        this.y = h - 20;
+        this.x = x;
+        this.y = y;
     }
 
     draw() {
@@ -70,9 +71,64 @@ class Block {
     }
 }
 
+class Blocks {
+    constructor() {
+        this.blocks = [];
+        this.generateBlocks();
+    }
+
+    draw() {
+        this.blocks.forEach(block => {
+            block.draw();
+        });
+    }
+
+    getBlocks() {
+        return this.blocks;
+    }
+
+    generateBlocks() {
+
+        for(var i = 0; i < w-20; i += 20) {
+            for(var j = 0; j < 90; i += 5)
+                this.blocks.push(new Block(20, i, j))
+        }
+    }
+
+    blockBreak(hitBoxBall, center) {
+        /* return values
+                1
+        --------------
+        |           |
+      4 |           | 2
+        |           |
+        -------------
+                3
+        */
+        this.blocks.map(block => {
+        hitbox = block.getHitBox()
+        if (hitBoxBall[2] > hitbox[0] || hitbox[2] > hitBoxBall[0]) {
+            if (hitBoxBall[3] > hitbox[1] || hitbox[3] > hitBoxBall[1]) {
+                block = null;
+                if (center.x < hitbox[0]) return 4;
+                else if (center.x > hitbox[2]) return 2;
+                else if (center.y > hitbox[1]) return 1;
+                else if (center.y < hitbox[3]) return 3;
+            }
+            else {
+                block = block;
+            }
+        }
+       });
+
+       return 0;
+    }
+}
+
+
 class Paddle extends Block{
     constructor(width) {
-        super(width);
+        super(width, w/2, h-20);
         this.XSTEP = 5;
     }
 
@@ -154,16 +210,33 @@ class Ball {
             PLAYING = false;
         }
         //check if it hits a block
-        blocks.map((block) => {
-            if (collisionCheck(this.getHitBox(), block.getHitBox())) {
-                block = null;
-                SCORE += 10;
-            }
-            else{
-                block = block;
-            }
-        });
-        var win = true;
+        blocks.blockBreak(this.getHitBox(), this.getCenter());
+        checkWin(blocks);
+        this.x += this.speed*cos(radians(this.angle));
+        this.y += this.speed*sin(radians(this.angle));
+    }
+
+    getHitBox() {
+        return [this.x-this.radius, this.y-this.radius, this.x+this.radius, this.y+this.radius];
+    }
+
+    getCenter() {
+        return {x : this.x, y : this.y};
+    }
+}
+
+
+function collisionCheck(hitbox1, hitbox2) {
+    if (hitbox1[2] > hitbox2[0] || hitbox2[2] > hitbox1[0]) { // Check the x direction
+        if (hitbox1[3] > hitbox2[1] || hitbox2[3] > hitbox1[1]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkBlocks(blocks) {
+    var win = true;
         blocks.forEach(block => {
             if (block != null) {
                 win = false;
@@ -172,21 +245,4 @@ class Ball {
         if (win) {
             PLAYING = false;
         }
-        this.x += this.speed*cos(radians(this.angle))
-        this.y += this.speed*sin(radians(this.angle))
-    }
-
-    getHitBox() {
-        return [this.x-this.radius, this.y-this.radius, this.x+this.radius, this.y+this.radius];
-    }
-}
-
-
-function collisionCheck(hitbox1, hitbox2) {
-    if (hitbox1[3] > hitbox2[0] || hitbox2[3] > hitbox1[0]) { // Check the x direction
-        if (hitbox1[4] > hitbox2[1] || hitbox2[4] > hitbox1[1]) {
-            return true;
-        }
-    }
-    return false;
 }
